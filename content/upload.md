@@ -1,5 +1,5 @@
 ---
 title: "Upload Files"
-layout: "upload"
+layout: "single"
 type: "upload"
 ---

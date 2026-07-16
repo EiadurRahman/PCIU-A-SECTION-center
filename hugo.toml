@@ -35,6 +35,31 @@ title = 'PCIU BBA-A CENTER'
   logo = "images/Logo.png"
   logoHeight = "36px"
 
+
+[params.about_card]
+  enable = true
+  title = "ABOUT PCIU BBA 37-A CENTER"
+  subtitle = "$ A website build for student of PCIU BBA-37-A by a student of PCIU BBA-37-A"
+  
+  # Left Column: "What is this for?"
+  left_title = "What is this for?"
+  left_text = "This site tracks and organises all program-related information, including class routines, course content, student notes, and more. You can also contribute by uploading materials.\n\nIf you have any suggestions for how to move the site forward, please contact me or anyone else involved in the project.\n\nThis is a student-created project for other students."
+
+  # Right Column: "Who made this?"
+  right_title = "Who made this?"
+  right_text = "It's me, Yaad. One of your classmates. You have probably seen me in class. I am one of you. If this project helped you in any way, let me know. I'd love to listen."
+  creator_image = "images/me.webp" # Place this in your static/images/ folder
+  
+  # Social links
+  facebook_url = "https://www.facebook.com/EiadurRahman07"
+  instagram_url = "https://www.instagram.com/eiadurrahman/"
+
+  # Bottom Right Box
+  extra_box_text = "Lets go to the home page"
+  extra_box_url = "/" # Optional link for the bottom-right button/box
+
+
+
 # build scripts
 [build]
   [build.buildStats]

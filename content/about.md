@@ -1,4 +1,5 @@
 ---
 title: "About Us"
-layout: "about"
+layout: "single"
+type: "about"       
 ---
