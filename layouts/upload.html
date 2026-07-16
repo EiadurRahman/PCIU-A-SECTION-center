@@ -1,5 +1,164 @@
 {{ define "main" }}
-<div class="bg-black text-amber-50">
-    <h1>upload</h1>
+<div class="flex items-center justify-center min-h-[60vh] px-4 py-12">
+  <div class="w-full max-w-md p-8 bg-white border border-gray-100 rounded-2xl shadow-xl dark:bg-zinc-900 dark:border-zinc-800">
+    
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Upload File</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Files will be saved in the <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-zinc-800 rounded text-rose-500 font-mono text-xs">uploads/</code> directory.</p>
+    </div>
+
+    <div class="space-y-5">
+      <label for="fileInput" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 dark:border-zinc-700 rounded-xl cursor-pointer bg-gray-50 dark:bg-zinc-850 hover:bg-gray-100 dark:hover:bg-zinc-800/50 transition-colors group">
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <svg class="w-10 h-10 mb-3 text-gray-400 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          <p class="mb-1 text-sm text-gray-600 dark:text-gray-300 font-medium">Click to select a file</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500" id="filePlaceholder">Any format allowed</p>
+        </div>
+        <input type="file" id="fileInput" class="hidden" onchange="updateFileInfo()" />
+      </label>
+
+      <div id="fileInfoWrapper" class="hidden flex items-center justify-between p-3 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 rounded-lg">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <svg class="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div class="truncate">
+            <p id="fileName" class="text-sm font-semibold text-gray-700 dark:text-gray-200 truncate"></p>
+            <p id="fileSize" class="text-xs text-gray-400 dark:text-gray-500"></p>
+          </div>
+        </div>
+        <button onclick="clearSelection()" class="text-gray-400 hover:text-rose-500 transition-colors p-1 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <button 
+        id="uploadBtn"
+        onclick="handleUpload()" 
+        class="w-full flex justify-center items-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
+      >
+        Upload File
+      </button>
+
+      <p id="status" class="text-sm font-medium text-center min-h-[20px] transition-all duration-150"></p>
+    </div>
+
+  </div>
 </div>
+
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const fileInfoWrapper = document.getElementById('fileInfoWrapper');
+  const fileName = document.getElementById('fileName');
+  const fileSize = document.getElementById('fileSize');
+  const statusText = document.getElementById('status');
+  const uploadBtn = document.getElementById('uploadBtn');
+
+  // Triggered when file input updates
+  function updateFileInfo() {
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      fileName.innerText = file.name;
+      fileSize.innerText = formatBytes(file.size);
+      fileInfoWrapper.classList.remove('hidden');
+      clearStatus();
+    } else {
+      clearSelection();
+    }
+  }
+
+  // Resets selection
+  function clearSelection() {
+    fileInput.value = '';
+    fileInfoWrapper.classList.add('hidden');
+    fileName.innerText = '';
+    fileSize.innerText = '';
+    clearStatus();
+  }
+
+  // Format File Size
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  // Handle status feedback styling
+  function showStatus(text, type) {
+    statusText.innerText = text;
+    // Reset status colors
+    statusText.className = "text-sm font-medium text-center min-h-[20px] transition-all duration-150";
+    
+    if (type === 'error') {
+      statusText.classList.add('text-rose-600', 'dark:text-rose-400');
+    } else if (type === 'success') {
+      statusText.classList.add('text-emerald-600', 'dark:text-emerald-400');
+    } else if (type === 'info') {
+      statusText.classList.add('text-amber-500', 'dark:text-amber-400');
+    }
+  }
+
+  function clearStatus() {
+    statusText.innerText = '';
+    statusText.className = "text-sm font-medium text-center min-h-[20px]";
+  }
+
+  // Handle Main Upload Operation
+  async function handleUpload() {
+    if (fileInput.files.length === 0) {
+      showStatus("Please select a file first.", "error");
+      return;
+    }
+
+    const file = fileInput.files[0];
+    
+    // Disable inputs during network request
+    uploadBtn.disabled = true;
+    fileInput.disabled = true;
+    showStatus("Processing file...", "info");
+
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+      const base64Data = e.target.result;
+
+      showStatus("Uploading to GitHub...", "info");
+      
+      try {
+        const response = await fetch('/.netlify/functions/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileData: base64Data
+          })
+        });
+
+        const result = await response.text();
+        
+        if (response.ok) {
+          showStatus("Success! File uploaded to GitHub.", "success");
+          clearSelection();
+        } else {
+          showStatus(`Error: ${result}`, "error");
+        }
+      } catch (err) {
+        showStatus(`Network error: ${err.message}`, "error");
+      } finally {
+        // Re-enable interactive elements
+        uploadBtn.disabled = false;
+        fileInput.disabled = false;
+      }
+    };
+
+    reader.readAsDataURL(file);
+  }
+</script>
 {{ end }}

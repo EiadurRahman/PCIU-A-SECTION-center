@@ -116,7 +116,7 @@ static/
         {{ block "main" . }}{{ end }}
     </main>
 
-    <script src="{{ " js/main.js" | relURL }}" defer></script>
+    <script src="{{ "js/main.js" | relURL }}" defer></script>
 </body>
 
 </html>
