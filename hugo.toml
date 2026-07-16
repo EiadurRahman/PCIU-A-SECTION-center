@@ -1,5 +1,6 @@
 baseURL = 'https://example.org/'
 locale = 'en-us'
+timeZone = "Asia/Dhaka"
 title = 'PCIU BBA-A CENTER'
 
 
