@@ -1,0 +1,56 @@
+baseURL = 'https://example.org/'
+locale = 'en-us'
+timeZone = "Asia/Dhaka"
+title = 'PCIU BBA-A CENTER'
+
+
+# nabvar
+[menus]
+  [[menus.main]]
+    name = "HOME"
+    url = "/"
+    weight = 10
+
+  [[menus.main]]
+    name = "UPLOAD"
+    url = "/upload/"
+    weight = 20
+
+  [[menus.main]]
+    name = "ABOUT"
+    url = "/about/"
+    weight = 30
+
+#   [[menus.main]]
+#     name = "Contact"
+#     url = "/contact/"
+#     weight = 40
+#     [menus.main.params]
+#       is_button = true
+
+
+
+# parameters
+[params]
+  logo = "images/Logo.png"
+  logoHeight = "36px"
+
+# build scripts
+[build]
+  [build.buildStats]
+    enable = true
+  [[build.cachebusters]]
+    source = 'assets/notwatching/hugo_stats\.json'
+    target = 'css'
+  [[build.cachebusters]]
+    source = '(postcss|tailwind)\.config\.js'
+    target = 'css'
+
+[module]
+  [[module.mounts]]
+    source = 'assets'
+    target = 'assets'
+  [[module.mounts]]
+    disableWatch = true
+    source = 'hugo_stats.json'
+    target = 'assets/notwatching/hugo_stats.json'
