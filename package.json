@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx @tailwindcss/cli -i assets/css/main.css -o assets/css/built.css --minify && hugo --gc --minify",
+    "dev": "npx @tailwindcss/cli -i assets/css/main.css -o assets/css/built.css --watch & hugo server"
   },
   "keywords": [],
   "type": "commonjs",
