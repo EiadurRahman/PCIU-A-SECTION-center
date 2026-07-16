@@ -17,8 +17,8 @@ exports.handler = async function (event, context) {
 
     // Retrieve GitHub credentials from Netlify environment variables
     const GITHUB_TOKEN = process.env.GITHUB_PAT;
-    const REPO_OWNER = "YOUR_GITHUB_USERNAME"; // Replace with your GitHub username
-    const REPO_NAME = "YOUR_REPO_NAME";       // Replace with your Hugo project repository name
+    const REPO_OWNER = "EiadurRahman"; // Replace with your GitHub username
+    const REPO_NAME = "PCIU-A-SECTION-center";       // Replace with your Hugo project repository name
     const BRANCH = "main";                     // Replace with your target branch (e.g., main or master)
 
     const path = `uploads/${fileName}`;
