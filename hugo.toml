@@ -6,17 +6,17 @@ title = 'PCIU BBA-A CENTER'
 # nabvar
 [menus]
   [[menus.main]]
-    name = "Home"
+    name = "HOME"
     url = "/"
     weight = 10
 
   [[menus.main]]
-    name = "upload"
+    name = "UPLOAD"
     url = "/upload/"
     weight = 20
 
   [[menus.main]]
-    name = "About"
+    name = "ABOUT"
     url = "/about/"
     weight = 30
 
@@ -30,12 +30,9 @@ title = 'PCIU BBA-A CENTER'
 
 
 # parameters
-
 [params]
-  # Navbar Customization
-  logoLight = "images/Logo.png"
-  logoDark = "images/Logo.png"  # Optional: If your logo needs high contrast on dark backgrounds
-  logoHeight = "32px"                # Control height easily from configuration
+  logo = "images/Logo.png"
+  logoHeight = "36px"
 
 # build scripts
 [build]

@@ -5,7 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
-    <!-- We will link custom CSS here later -->
+
+    <script>
+        (function () {
+            var theme = localStorage.getItem('color-theme');
+            var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (!theme && systemDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 
     {{ with resources.Get "css/main.css" }}
     {{ $opts := dict "minify" (not hugo.IsDevelopment) }}
@@ -19,18 +28,28 @@
     {{ end }}
     {{ end }}
     {{ end }}
+
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="images/favicon_io/site.webmanifest">
 </head>
-<header>
-    {{ partial "navbar.html" . }}
 
-</header>
+<body
+    class="h-full min-h-screen bg-[url('/images/background_m.png')] md:bg-[url('/images/background.png')] bg-cover bg-center bg-fixed dark:bg-neutral-950 text-black dark:text-white transition-colors duration-300 flex flex-col">
 
-<body>
-    <script src="{{ "js/main.js" | relURL }}"></script>
-        <main class="max-w-7xl mx-auto p-6">
-            {{ block "main" . }}{{ end }}
-        </main>
+    <div class="pointer-events-none fixed inset-0 z-0 hidden dark:block bg-black/40 transition-opacity duration-300">
+    </div>
+
+    <header class="relative z-10">
+        {{ partial "navbar.html" . }}
+    </header>
+
+    <main class="relative z-10 flex-grow max-w-6xl w-full mx-auto p-6 md:py-10">
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <script src="{{ " js/main.js" | relURL }}" defer></script>
 </body>
-
 
 </html>

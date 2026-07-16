@@ -1,0 +1,76 @@
+semester: "Fall 2026"
+program: "BBA"
+batch: "BBA-37-D-A (1st semester)"
+batch_coordinator:
+  name: "Hafsa Binta Firdaus"
+  designation: "Lecturer, Department of Business Administration"
+  major: "HRM"
+  contact_number: "01879377124"
+schedule:
+  Saturday:
+    - time_slot: "8.30am-10.00am"
+      course_code: "ACC 100"
+      course_title: "Financial Accounting"
+      instructor: "CT-MIH"
+      room: 119
+    - time_slot: "11.30am-1.00pm"
+      course_code: "BUS 100"
+      course_title: "Introduction to Business"
+      instructor: "SHA"
+      room: 222
+    - time_slot: "1.30pm-03.00pm"
+      course_code: "MKT 200"
+      course_title: "Principles of Marketing"
+      instructor: "CT: MRC"
+      room: 119
+  Sunday:
+    - time_slot: "8.30am-10.00am"
+      course_code: "ENG 101"
+      course_title: "Composition"
+      instructor: "BBA-37-A MRF"
+      room: 218
+    - time_slot: "10.00am-11.30am"
+      course_code: "HIST-101"
+      course_title: "History of the Emergence of Independent Bangladesh"
+      instructor: "KCB"
+      room: 219
+    - time_slot: "1.30pm-03.00pm"
+      course_code: "MGT 200"
+      course_title: "Principles of Management"
+      instructor: "CT:AZM"
+      room: 208
+  Monday:
+    - time_slot: "1.30pm-03.00pm"
+      course_code: "MKT 200"
+      course_title: "Principles of Marketing"
+      instructor: "CT: MRC"
+      room: 218
+    - time_slot: "4.30pm-6.00pm"
+      course_code: "ACC 100"
+      course_title: "Financial Accounting"
+      instructor: "CT-MIH"
+      room: 119
+  Tuesday: []
+  Wednesday:
+    - time_slot: "8.30am-10.00am"
+      course_code: "HIST-101"
+      course_title: "History of the Emergence of Independent Bangladesh"
+      instructor: "KCB"
+      room: 222
+    - time_slot: "10.00am-11.30am"
+      course_code: "MGT 200"
+      course_title: "Principles of Management"
+      instructor: "CT:AZM"
+      room: 222
+  Thursday:
+    - time_slot: "8.30am-10.00am"
+      course_code: "ENG 101"
+      course_title: "Composition"
+      instructor: "BBA-37-A MRF"
+      room: 119
+    - time_slot: "10.00am-11.30am"
+      course_code: "BUS 100"
+      course_title: "Introduction to Business"
+      instructor: "CT-SHA"
+      room: 218
+  Friday: []
