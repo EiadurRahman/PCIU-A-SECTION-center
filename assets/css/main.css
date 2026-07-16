@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@source "hugo_stats.json";
+
+/* Tells Tailwind to apply dark: variants when .dark is present */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* This tells Tailwind v4 to toggle dark styles based on the .dark class */
+  --variant-dark: (.dark &); 
+}
+
+/* Optional global smooth color transition for the body background and text */
+@layer base {
+  body {
+    @apply transition-colors duration-200;
+  }
+}

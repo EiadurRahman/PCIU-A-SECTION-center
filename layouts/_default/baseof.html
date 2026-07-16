@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
+    <!-- We will link custom CSS here later -->
+
+    {{ with resources.Get "css/main.css" }}
+    {{ $opts := dict "minify" (not hugo.IsDevelopment) }}
+    {{ with . | css.TailwindCSS $opts }}
+    {{ if hugo.IsDevelopment }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}">
+    {{ else }}
+    {{ with . | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+    {{ end }}
+    {{ end }}
+    {{ end }}
+    {{ end }}
+</head>
+<header>
+    {{ partial "navbar.html" . }}
+
+</header>
+
+<body>
+    <script src="{{ "js/main.js" | relURL }}"></script>
+        <main class="max-w-7xl mx-auto p-6">
+            {{ block "main" . }}{{ end }}
+        </main>
+</body>
+
+
+</html>
