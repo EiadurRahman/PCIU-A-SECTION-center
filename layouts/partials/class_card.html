@@ -1,3 +1,22 @@
+<!--
+  Today's Class card — fully client-side.
+  No Hugo template logic is used to render data, so this partial never needs
+  a rebuild/redeploy when data/classes.json changes on GitHub. All fetching,
+  day-matching (using the visitor's own clock), and rendering happens in the
+  browser via the script at the bottom.
+
+  Sizing note: this does NOT use Tailwind breakpoints (md:) to reflow the
+  layout on small screens. Every box, gap, and font uses clamp()-based fluid
+  CSS instead, so the structure (3-column grid, single-row header) stays
+  identical from a phone up to a laptop — it just scales down continuously
+  with the viewport instead of stacking/reordering at a breakpoint.
+
+  Theme note: colors use Tailwind's `dark:` variant to follow the site-wide
+  dark/light toggle in the navbar (the `dark` class on <html>) rather than
+  being hardcoded to the dark palette. No extra JS is needed here — the
+  navbar's existing theme-toggle script already flips the `dark` class.
+-->
+
 <style>
     #class-card-root {
         padding: clamp(0.75rem, 4vw, 1.5rem);
@@ -100,53 +119,53 @@
     }
 </style>
 
-<div id="class-card-root" class="max-w-4xl mx-auto bg-gradient-to-b from-[#2a2a2a] to-[#1c1c1c] text-white shadow-2xl font-sans">
+<div id="class-card-root" class="max-w-4xl mx-auto bg-gradient-to-b from-white to-neutral-50 dark:from-[#2a2a2a] dark:to-[#1c1c1c] text-black dark:text-white border border-black/5 dark:border-white/5 shadow-xl dark:shadow-2xl font-sans transition-colors duration-300">
 
     <!-- Top Info Row: Semester, Program, and Batch details -->
-    <div class="cc-topinfo flex flex-wrap justify-between font-medium tracking-wide text-neutral-400 border-b border-neutral-800">
+    <div class="cc-topinfo flex flex-wrap justify-between font-medium tracking-wide text-black/60 dark:text-neutral-400 border-b border-black/10 dark:border-neutral-800">
         <div>
-            <span class="text-neutral-500">Program:</span> <span id="cc-program" class="text-neutral-200 font-semibold">&nbsp;</span>
-            <span class="mx-2 text-neutral-700">|</span>
-            <span class="text-neutral-500">Semester:</span> <span id="cc-semester" class="text-neutral-200 font-semibold">&nbsp;</span>
+            <span class="text-black/40 dark:text-neutral-500">Program:</span> <span id="cc-program" class="text-black dark:text-neutral-200 font-semibold">&nbsp;</span>
+            <span class="mx-2 text-black/20 dark:text-neutral-700">|</span>
+            <span class="text-black/40 dark:text-neutral-500">Semester:</span> <span id="cc-semester" class="text-black dark:text-neutral-200 font-semibold">&nbsp;</span>
         </div>
         <div>
-            <span class="text-neutral-500">Batch:</span> <span id="cc-batch" class="text-neutral-200 font-mono">&nbsp;</span>
+            <span class="text-black/40 dark:text-neutral-500">Batch:</span> <span id="cc-batch" class="text-black dark:text-neutral-200 font-mono">&nbsp;</span>
         </div>
     </div>
 
     <!-- Header: day (left) | title (center) | date (right) — always a single row -->
-    <div class="cc-header flex flex-row items-baseline justify-between border-b border-neutral-700/50">
-        <span id="cc-day" class="cc-daydate flex-none font-semibold tracking-wider text-neutral-400 uppercase">&nbsp;</span>
-        <h2 class="cc-title flex-1 text-center font-light tracking-widest text-neutral-200">
+    <div class="cc-header flex flex-row items-baseline justify-between border-b border-black/10 dark:border-neutral-700/50">
+        <span id="cc-day" class="cc-daydate flex-none font-semibold tracking-wider text-black/60 dark:text-neutral-400 uppercase">&nbsp;</span>
+        <h2 class="cc-title flex-1 text-center font-light tracking-widest text-black dark:text-neutral-200">
             TODAY'S CLASS
         </h2>
-        <span id="cc-date" class="cc-daydate flex-none font-semibold tracking-wider text-neutral-400">&nbsp;</span>
+        <span id="cc-date" class="cc-daydate flex-none font-semibold tracking-wider text-black/60 dark:text-neutral-400">&nbsp;</span>
     </div>
 
     <div id="cc-classes" class="cc-grid grid grid-cols-3">
         <!-- Loading skeleton (replaced by JS once the fetch resolves) -->
-        <div class="cc-empty col-span-3 text-center text-neutral-400 bg-neutral-500/10 border border-dashed border-neutral-700 animate-pulse">
+        <div class="cc-empty col-span-3 text-center text-black/50 dark:text-neutral-400 bg-black/5 dark:bg-neutral-500/10 border border-dashed border-black/10 dark:border-neutral-700 animate-pulse">
             <p class="cc-empty-title font-light">Loading today's routine…</p>
         </div>
     </div>
 
     <!-- Batch Coordinator details -->
-    <div class="cc-coord flex flex-col bg-neutral-500/15 backdrop-blur-md border border-neutral-600/25 text-neutral-300">
+    <div class="cc-coord flex flex-col bg-black/5 dark:bg-neutral-500/15 backdrop-blur-md border border-black/10 dark:border-neutral-600/25 text-black/70 dark:text-neutral-300">
         <div class="cc-coord-row flex flex-row items-baseline">
-            <span class="cc-coord-label font-semibold text-neutral-100 shrink-0">Batch Coordinator:</span>
+            <span class="cc-coord-label font-semibold text-black dark:text-neutral-100 shrink-0">Batch Coordinator:</span>
             <span id="cc-coord-name" class="truncate">&nbsp;</span>
         </div>
         <div class="cc-coord-row flex flex-row items-baseline">
-            <span class="cc-coord-label font-semibold text-neutral-100 shrink-0">Designation:</span>
-            <span id="cc-coord-designation" class="text-neutral-400 truncate">&nbsp;</span>
+            <span class="cc-coord-label font-semibold text-black dark:text-neutral-100 shrink-0">Designation:</span>
+            <span id="cc-coord-designation" class="text-black/50 dark:text-neutral-400 truncate">&nbsp;</span>
         </div>
         <div id="cc-coord-major-row" class="cc-coord-row flex flex-row items-baseline hidden">
-            <span class="cc-coord-label font-semibold text-neutral-100 shrink-0">Major:</span>
-            <span id="cc-coord-major" class="text-neutral-300 truncate">&nbsp;</span>
+            <span class="cc-coord-label font-semibold text-black dark:text-neutral-100 shrink-0">Major:</span>
+            <span id="cc-coord-major" class="text-black/70 dark:text-neutral-300 truncate">&nbsp;</span>
         </div>
         <div class="cc-coord-row flex flex-row items-baseline">
-            <span class="cc-coord-label font-semibold text-neutral-100 shrink-0">Contact Number:</span>
-            <span id="cc-coord-contact" class="font-mono text-neutral-200">&nbsp;</span>
+            <span class="cc-coord-label font-semibold text-black dark:text-neutral-100 shrink-0">Contact Number:</span>
+            <span id="cc-coord-contact" class="font-mono text-black dark:text-neutral-200">&nbsp;</span>
         </div>
     </div>
 </div>
@@ -170,25 +189,25 @@
     function renderClasses(container, classes) {
         if (!classes || classes.length === 0) {
             container.innerHTML =
-                '<div class="cc-empty col-span-3 text-center text-neutral-400 bg-neutral-500/10 border border-dashed border-neutral-700">' +
+                '<div class="cc-empty col-span-3 text-center text-black/50 dark:text-neutral-400 bg-black/5 dark:bg-neutral-500/10 border border-dashed border-black/10 dark:border-neutral-700">' +
                     '<p class="cc-empty-title font-light">No classes scheduled for today!</p>' +
-                    '<p class="cc-empty-sub text-neutral-500">Enjoy your day off.</p>' +
+                    '<p class="cc-empty-sub text-black/40 dark:text-neutral-500">Enjoy your day off.</p>' +
                 '</div>';
             return;
         }
 
         var html = classes.map(function (c) {
             var noteHtml = c.note && String(c.note).trim() !== ""
-                ? '<p class="cc-item-note italic text-neutral-500">' + esc(c.note) + '</p>'
+                ? '<p class="cc-item-note italic text-black/40 dark:text-neutral-500">' + esc(c.note) + '</p>'
                 : '';
 
             return (
-                '<div class="cc-item bg-neutral-500/20 backdrop-blur-md border border-neutral-600/30 flex flex-col justify-between min-w-0 hover:bg-neutral-500/30 transition duration-300">' +
+                '<div class="cc-item bg-black/5 dark:bg-neutral-500/20 backdrop-blur-md border border-black/10 dark:border-neutral-600/30 flex flex-col justify-between min-w-0 hover:bg-black/10 dark:hover:bg-neutral-500/30 transition duration-300">' +
                     '<div class="min-w-0">' +
-                        '<h3 class="cc-item-title font-medium text-neutral-100 leading-snug">' + esc(c.course_title) + '</h3>' +
-                        '<p class="cc-item-sub text-neutral-300">' + esc(c.course_code) + '&nbsp;&nbsp;' + esc(c.instructor) + '</p>' +
+                        '<h3 class="cc-item-title font-medium text-black dark:text-neutral-100 leading-snug">' + esc(c.course_title) + '</h3>' +
+                        '<p class="cc-item-sub text-black/70 dark:text-neutral-300">' + esc(c.course_code) + '&nbsp;&nbsp;' + esc(c.instructor) + '</p>' +
                     '</div>' +
-                    '<div class="cc-item-meta border-t border-neutral-600/20 text-neutral-400">' +
+                    '<div class="cc-item-meta border-t border-black/10 dark:border-neutral-600/20 text-black/50 dark:text-neutral-400">' +
                         '<p>Room : ' + esc(c.room) + '</p>' +
                         '<p>' + esc(c.time_slot) + '</p>' +
                         noteHtml +
@@ -202,9 +221,9 @@
 
     function renderError(container, message) {
         container.innerHTML =
-            '<div class="cc-empty col-span-3 text-center text-neutral-400 bg-neutral-500/10 border border-dashed border-neutral-700">' +
+            '<div class="cc-empty col-span-3 text-center text-black/50 dark:text-neutral-400 bg-black/5 dark:bg-neutral-500/10 border border-dashed border-black/10 dark:border-neutral-700">' +
                 '<p class="cc-empty-title font-light">Couldn\'t load today\'s routine</p>' +
-                '<p class="cc-empty-sub text-neutral-500">' + esc(message) + '</p>' +
+                '<p class="cc-empty-sub text-black/40 dark:text-neutral-500">' + esc(message) + '</p>' +
             '</div>';
     }
 
