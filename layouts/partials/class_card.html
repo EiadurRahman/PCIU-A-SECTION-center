@@ -241,10 +241,13 @@
         setText("cc-day", today);
         setText("cc-date", dateStr);
 
-        // Cache-bust once per day (by the client's local date) so a stale
-        // browser/CDN cache doesn't hide same-day edits to classes.json.
-        var cacheBust = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
-        var url = DATA_URL + "?cb=" + cacheBust;
+        // Cache-bust on every load with a unique timestamp. raw.githubusercontent.com
+        // sits behind a CDN that caches responses by URL regardless of the
+        // browser's own cache (which `cache: "no-store"` below can't touch),
+        // so a cache-buster that only changes once a day can serve a stale
+        // response for hours after an edit. A per-load value guarantees a
+        // fresh fetch every time.
+        var url = DATA_URL + "?cb=" + Date.now();
 
         fetch(url, { cache: "no-store" })
             .then(function (res) {
