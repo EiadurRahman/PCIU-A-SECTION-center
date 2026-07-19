@@ -141,18 +141,23 @@ layouts/
 ### layouts/partials/class_card.html
 
 ```html
-{{ $url := "https://raw.githubusercontent.com/EiadurRahman/PCIU-A-SECTION-center/refs/heads/main/data/classes.json" }}
-{{ $response := resources.GetRemote $url }}
+{{/* Base URL for the live classes.json hosted on GitHub */}}
+{{ $baseURL := "https://raw.githubusercontent.com/EiadurRahman/PCIU-A-SECTION-center/refs/heads/main/data/classes.json" }}
+
+{{/* Cache-bust once per day so Hugo pulls a fresh copy instead of serving a stale cached fetch */}}
+{{ $cacheBust := now.Format "2006-01-02" }}
+{{ $url := printf "%s?cb=%s" $baseURL $cacheBust }}
+
 {{ $data := dict }}
 
-{{ if $response }}
-  {{ if $response.Err }}
-    {{ errorf "Failed to fetch class data from remote source: %s" $response.Err }}
+{{ with try (resources.GetRemote $url) }}
+  {{ with .Err }}
+    {{ errorf "Failed to fetch class data from remote source: %s" . }}
+  {{ else with .Value }}
+    {{ $data = transform.Unmarshal .Content }}
   {{ else }}
-    {{ $data = transform.Unmarshal $response.Content }}
+    {{ errorf "Unable to get remote resource %q" $url }}
   {{ end }}
-{{ else }}
-  {{ errorf "Unable to connect or fetch data from remote URL: %s" $url }}
 {{ end }}
 
 {{ $today := now.Format "Monday" }}
