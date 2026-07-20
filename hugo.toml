@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = '/'
 locale = 'en-us'
 timeZone = "Asia/Dhaka"
 title = 'PCIU BBA-A CENTER'
