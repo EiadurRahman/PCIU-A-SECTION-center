@@ -1,0 +1,29 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "8b8e3f8550acfb2a",
+        "HostId": "aMkswEmNmZAgx6zR5NSQ07mOWM+sxBWVL",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "server": "nginx",
+            "date": "Wed, 22 Jul 2026 19:05:13 GMT",
+            "content-type": "application/xml",
+            "content-length": "413",
+            "connection": "keep-alive",
+            "x-amz-request-id": "8b8e3f8550acfb2a",
+            "x-amz-id-2": "aMkswEmNmZAgx6zR5NSQ07mOWM+sxBWVL",
+            "cache-control": "max-age=0, no-cache, no-store",
+            "strict-transport-security": "max-age=63072000"
+        },
+        "RetryAttempts": 0
+    },
+    "Buckets": [
+        {
+            "Name": "pciu-bba-37",
+            "CreationDate": "2026-07-22T18:44:33.079000+00:00"
+        }
+    ],
+    "Owner": {
+        "DisplayName": "",
+        "ID": "20cd1454c31e"
+    }
+}

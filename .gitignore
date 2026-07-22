@@ -4,3 +4,5 @@ project.txt
 public
 node_modules
 github_ls.txt
+dashboard/venv
+.env*
