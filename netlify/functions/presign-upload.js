@@ -1,4 +1,4 @@
-const { PutObjectCommand, PutBucketCorsCommand } = require("@aws-sdk/client-s3");
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const {
   s3Client,
@@ -37,30 +37,7 @@ exports.handler = async (event) => {
     // 3. Construct storage path key
     const key = buildKey({ course, category, hwNumber, filename });
 
-    // 4. Force proper CORS configuration on Backblaze B2 bucket
-    // This allows browser preflight OPTIONS requests with Content-Type header
-    try {
-      await s3Client.send(
-        new PutBucketCorsCommand({
-          Bucket: BUCKET,
-          CORSConfiguration: {
-            CORSRules: [
-              {
-                AllowedOrigins: ["*"],
-                AllowedMethods: ["GET", "PUT", "POST", "HEAD"],
-                AllowedHeaders: ["*"],
-                ExposeHeaders: ["ETag"],
-                MaxAgeSeconds: 3600,
-              },
-            ],
-          },
-        })
-      );
-    } catch (corsErr) {
-      console.warn("Notice: Non-fatal CORS rule update warning:", corsErr.message);
-    }
-
-    // 5. Generate presigned URL
+    // 4. Generate presigned URL
     const command = new PutObjectCommand({
       Bucket: BUCKET,
       Key: key,
