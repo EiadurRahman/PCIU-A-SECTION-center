@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const statusText = document.getElementById("status");
     const uploadBtn = document.getElementById("uploadBtn");
 
-    //   const MAX_FILE_BYTES = 25 * 1024 * 1024; // Sync with _b2-client.js limit (25MB)
     const MAX_FILE_BYTES = 100 * 1024 * 1024; // 100 MB
 
     // Allow any file type for uploads so teachers/students can submit the formats they need.
@@ -79,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const file = fileInput.files[0];
         const category = categorySelect.value;
-        const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+        const ext = file.name.includes(".") ? file.name.slice(file.name.lastIndexOf(".")).toLowerCase() : "";
 
         if (file.size > MAX_FILE_BYTES) {
             showStatus(`File size exceeds max limit of ${formatBytes(MAX_FILE_BYTES)}.`, "error");
@@ -117,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showStatus("Initializing secure upload...", "info");
 
         try {
-            const contentType = file.type || "application/octet-stream";
+            const contentType = file.type && file.type.trim() !== "" ? file.type : "application/octet-stream";
 
             // 1. Request presigned PUT URL from Netlify function
             const presignRes = await fetch("/.netlify/functions/presign-upload", {
@@ -137,15 +136,18 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const presignData = await presignRes.json();
-            if (!presignRes.ok) {
-                throw new Error(presignData.error || "Authorization failed or invalid payload.");
+            
+            // Check HTTP status and ensure uploadUrl field is present
+            if (!presignRes.ok || !presignData.uploadUrl) {
+                throw new Error(presignData.error || "Failed to retrieve direct upload target.");
             }
 
             // 2. Perform direct storage PUT with progress tracking
             showStatus("Uploading asset...", "info");
             progressWrapper.classList.remove("hidden");
 
-            await putWithProgress(presignData.url, file, contentType);
+            // FIX: Pass presignData.uploadUrl instead of presignData.url
+            await putWithProgress(presignData.uploadUrl, file, contentType);
 
             showStatus("File successfully uploaded to library!", "success");
 
@@ -166,6 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function putWithProgress(url, file, contentType) {
         return new Promise((resolve, reject) => {
+            // Guard clause to catch malformed URLs before issuing network request
+            if (!url || typeof url !== "string" || !url.startsWith("http")) {
+                return reject(new Error("Invalid upload target URL received."));
+            }
+
             const xhr = new XMLHttpRequest();
             xhr.open("PUT", url, true);
             xhr.setRequestHeader("Content-Type", contentType);
