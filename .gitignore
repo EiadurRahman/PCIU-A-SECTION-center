@@ -6,3 +6,7 @@ node_modules
 github_ls.txt
 dashboard/venv
 .env*
+
+dashboard/venv/
+node_modules/
+uploads/
