@@ -83,3 +83,5 @@ module.exports = {
   json, 
   buildKey 
 };
+
+// this shoud fix the issue with the presign-upload.js and upload.js files by ensuring that the s3Client is correctly named and exported, and that the buildKey function properly validates the course, category, hwNumber, and filename before constructing the S3 key.
