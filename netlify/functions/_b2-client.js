@@ -2,17 +2,20 @@
 // All Netlify Functions in this folder import from here.
 const { S3Client } = require("@aws-sdk/client-s3");
 
-const b2 = new S3Client({
-  endpoint: process.env.B2_ENDPOINT,       // e.g. https://s3.us-east-005.backblazeb2.com
-  region: process.env.B2_REGION,           // e.g. us-east-005
+const s3Client = new S3Client({
+  endpoint: process.env.B2_ENDPOINT,
+  region: process.env.B2_REGION || "us-east-005",
   credentials: {
-    accessKeyId: process.env.B2_APPLICATION_KEY_ID, // <-- FIXED
+    accessKeyId: process.env.B2_KEY_ID,
     secretAccessKey: process.env.B2_APPLICATION_KEY,
   },
-  forcePathStyle: true, // required for B2's S3-compatible endpoint
+  forcePathStyle: true,
+  // Disable automatic flexible checksum query params in presigned URLs
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
 });
 
-const BUCKET = process.env.B2_BUCKET_NAME; // <-- FIXED
+const BUCKET = process.env.B2_BUCKET_NAME;
 
 // Fixed convention — keep this in sync with what's actually in the bucket.
 const COURSES = ["ACC-100", "BUS 100", "ENG 101", "HIST-101", "MGT 200", "MKT 200"];
@@ -43,8 +46,7 @@ function json(statusCode, body) {
   };
 }
 
-// Validates course/category/[hwNumber/]filename and returns the bucket key,
-// or throws with a user-facing message.
+// Validates course/category/[hwNumber/]filename and returns the bucket key
 function buildKey({ course, category, hwNumber, filename }) {
   if (!COURSES.includes(course)) throw new Error(`Unknown course: ${course}`);
   if (!CATEGORIES.includes(category)) throw new Error(`Unknown category: ${category}`);
@@ -70,4 +72,14 @@ function buildKey({ course, category, hwNumber, filename }) {
   return `${course}/${category}/${filename}`;
 }
 
-module.exports = { b2, BUCKET, COURSES, CATEGORIES, ALLOWED_EXTENSIONS, MAX_FILE_BYTES, corsHeaders, json, buildKey };
+module.exports = { 
+  s3Client, 
+  BUCKET, 
+  COURSES, 
+  CATEGORIES, 
+  ALLOWED_EXTENSIONS, 
+  MAX_FILE_BYTES, 
+  corsHeaders, 
+  json, 
+  buildKey 
+};
