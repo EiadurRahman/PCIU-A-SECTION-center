@@ -50,9 +50,13 @@ function buildKey({ course, category, hwNumber, filename }) {
   if (!CATEGORIES.includes(category)) throw new Error(`Unknown category: ${category}`);
   if (!filename || /[\/\\]/.test(filename)) throw new Error("Invalid filename");
 
-  const ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
-  if (!ALLOWED_EXTENSIONS[category].includes(ext)) {
-    throw new Error(`Extension ${ext} not allowed for ${category}`);
+  // Check extension safely if allowed extensions array is provided
+  const allowed = ALLOWED_EXTENSIONS[category];
+  if (allowed !== null && Array.isArray(allowed)) {
+    const ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+    if (!allowed.includes(ext)) {
+      throw new Error(`Extension ${ext} not allowed for ${category}`);
+    }
   }
 
   if (category === "HW") {
