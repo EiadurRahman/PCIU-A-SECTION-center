@@ -12,7 +12,7 @@ title = 'PCIU BBA-A CENTER'
     weight = 10
 
   [[menus.main]]
-    name = "UPLOAD"
+    name = "LIBRARY"
     url = "/library/"
     weight = 20
 
