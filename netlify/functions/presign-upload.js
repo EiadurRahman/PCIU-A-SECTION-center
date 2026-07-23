@@ -1,7 +1,7 @@
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const { PutObjectCommand, PutBucketCorsCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const {
-  s3Client, // <-- Make sure this is named s3Client
+  s3Client,
   BUCKET,
   MAX_FILE_BYTES,
   corsHeaders,
@@ -10,7 +10,7 @@ const {
 } = require("./_b2-client");
 
 exports.handler = async (event) => {
-  // Handle CORS preflight
+  // Handle CORS preflight for Netlify Function calls
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers: corsHeaders(), body: "" };
   }
@@ -20,7 +20,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Secret validation
+    // 1. Secret validation
     const secret = event.headers["x-upload-secret"];
     if (!secret || secret !== process.env.UPLOAD_SECRET) {
       return json(401, { error: "Unauthorized: Invalid upload secret" });
@@ -29,19 +29,44 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || "{}");
     const { course, category, hwNumber, filename, contentType, fileSize } = body;
 
+    // 2. File size limit validation
     if (fileSize && fileSize > MAX_FILE_BYTES) {
       return json(400, { error: "File exceeds 100MB limit" });
     }
 
+    // 3. Construct storage path key
     const key = buildKey({ course, category, hwNumber, filename });
 
+    // 4. Force proper CORS configuration on Backblaze B2 bucket
+    // This allows browser preflight OPTIONS requests with Content-Type header
+    try {
+      await s3Client.send(
+        new PutBucketCorsCommand({
+          Bucket: BUCKET,
+          CORSConfiguration: {
+            CORSRules: [
+              {
+                AllowedOrigins: ["*"],
+                AllowedMethods: ["GET", "PUT", "POST", "HEAD"],
+                AllowedHeaders: ["*"],
+                ExposeHeaders: ["ETag"],
+                MaxAgeSeconds: 3600,
+              },
+            ],
+          },
+        })
+      );
+    } catch (corsErr) {
+      console.warn("Notice: Non-fatal CORS rule update warning:", corsErr.message);
+    }
+
+    // 5. Generate presigned URL
     const command = new PutObjectCommand({
       Bucket: BUCKET,
       Key: key,
       ContentType: contentType || "application/octet-stream",
     });
 
-    // Generate presigned URL with 5-minute expiration
     const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
 
     return json(200, { uploadUrl, key });
