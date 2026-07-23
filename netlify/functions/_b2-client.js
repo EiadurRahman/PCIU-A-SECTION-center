@@ -18,13 +18,14 @@ const BUCKET = process.env.B2_BUCKET_NAME; // <-- FIXED
 const COURSES = ["ACC-100", "BUS 100", "ENG 101", "HIST-101", "MGT 200", "MKT 200"];
 const CATEGORIES = ["CLS-CONTENT", "CLS-NOTE", "HW"];
 
+// Allow any file type for uploads so teachers/students can submit the formats they need.
 const ALLOWED_EXTENSIONS = {
-  "CLS-CONTENT": [".pdf", ".ppt", ".pptx", ".doc", ".docx"],
-  "CLS-NOTE": [".jpg", ".jpeg", ".png", ".webp", ".heic"],
-  "HW": [".pdf", ".jpg", ".jpeg", ".png", ".webp", ".doc", ".docx"],
+  "CLS-CONTENT": null,
+  "CLS-NOTE": null,
+  "HW": null,
 };
 
-const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25MB
+const MAX_FILE_BYTES = 100 * 1024 * 1024; // 100MB
 
 function corsHeaders() {
   return {
