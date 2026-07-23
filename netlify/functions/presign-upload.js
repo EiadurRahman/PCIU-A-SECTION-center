@@ -1,10 +1,5 @@
-// POST /.netlify/functions/presign-upload
-// Body: { course, category, hwNumber?, filename, contentType, fileSize }
-// Header: x-upload-secret (must match UPLOAD_SECRET env var)
-// Returns: { url, key } — browser then PUTs the file directly to `url`.
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-// const { b2, BUCKET, MAX_FILE_BYTES, corsHeaders, json, buildKey } = require("./_b2-client");
 const {
   s3Client, // <-- Make sure this is named s3Client
   BUCKET,
@@ -15,46 +10,43 @@ const {
 } = require("./_b2-client");
 
 exports.handler = async (event) => {
-  if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: corsHeaders() };
-  if (event.httpMethod !== "POST") return json(405, { error: "POST only" });
-
-  if (event.headers["x-upload-secret"] !== process.env.UPLOAD_SECRET) {
-    return json(401, { error: "Unauthorized" });
+  // Handle CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers: corsHeaders(), body: "" };
   }
 
-  let body;
+  if (event.httpMethod !== "POST") {
+    return json(405, { error: "Method Not Allowed" });
+  }
+
   try {
-    body = JSON.parse(event.body);
-  } catch {
-    return json(400, { error: "Invalid JSON body" });
-  }
+    // Secret validation
+    const secret = event.headers["x-upload-secret"];
+    if (!secret || secret !== process.env.UPLOAD_SECRET) {
+      return json(401, { error: "Unauthorized: Invalid upload secret" });
+    }
 
-  const { course, category, hwNumber, filename, contentType, fileSize } = body;
+    const body = JSON.parse(event.body || "{}");
+    const { course, category, hwNumber, filename, contentType, fileSize } = body;
 
-  if (typeof fileSize === "number" && fileSize > MAX_FILE_BYTES) {
-    return json(413, { error: `File exceeds ${MAX_FILE_BYTES / (1024 * 1024)}MB limit` });
-  }
+    if (fileSize && fileSize > MAX_FILE_BYTES) {
+      return json(400, { error: "File exceeds 100MB limit" });
+    }
 
-  let key;
-  try {
-    key = buildKey({ course, category, hwNumber, filename });
+    const key = buildKey({ course, category, hwNumber, filename });
+
+    const command = new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      ContentType: contentType || "application/octet-stream",
+    });
+
+    // Generate presigned URL with 5-minute expiration
+    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+
+    return json(200, { uploadUrl, key });
   } catch (err) {
-    return json(400, { error: err.message });
-  }
-
-  try {
-    const url = await getSignedUrl(
-      b2,
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: key,
-        ContentType: contentType || "application/octet-stream",
-      }),
-      { expiresIn: 300 } // 5 minutes
-    );
-    return json(200, { url, key });
-  } catch (err) {
-    console.error(err);
-    return json(500, { error: "Failed to create upload URL" });
+    console.error("Presign error:", err);
+    return json(400, { error: err.message || "Failed to generate presigned URL" });
   }
 };
