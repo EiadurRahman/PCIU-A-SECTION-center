@@ -2,7 +2,7 @@
 // Returns every object in the bucket as a flat list; the client builds the
 // course -> category -> (subfolder) -> file tree from this.
 const { ListObjectsV2Command } = require("@aws-sdk/client-s3");
-const { b2, BUCKET, corsHeaders, json } = require("./_b2-client");
+const { s3Client, BUCKET, json, corsHeaders } = require("./_b2-client");
 
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: corsHeaders() };
