@@ -7,7 +7,7 @@
       <p class="text-sm text-black/50 dark:text-white/50 mt-1">Files go straight to the class library.</p>
     </div>
 
-    <div class="space-y-4">
+    <form id="uploadForm" class="space-y-4" onsubmit="return false;">
       <div>
         <label class="block text-sm font-medium text-black/70 dark:text-white/70 mb-1">Course</label>
         <select id="courseSelect" class="w-full p-2.5 rounded-lg bg-white/50 dark:bg-black/40 border border-black/10 dark:border-white/10 text-black dark:text-white">
@@ -42,7 +42,7 @@
       <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-black/20 dark:border-white/20 rounded-xl cursor-pointer bg-white/20 dark:bg-black/20 hover:bg-white/30 dark:hover:bg-black/30 transition-colors">
         <p class="text-sm text-black/60 dark:text-white/60 font-medium" id="filePlaceholder">Click to select a file</p>
       </label>
-      <input type="file" id="fileInput" class="hidden" onchange="updateFileInfo()">
+      <input type="file" id="fileInput" class="hidden">
 
       <div id="progressWrapper" class="hidden">
         <div class="w-full h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
@@ -52,106 +52,16 @@
 
       <button
         id="uploadBtn"
-        onclick="handleUpload()"
+        type="submit"
         class="w-full flex justify-center items-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-xl shadow-md transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Upload File
       </button>
 
       <p id="status" class="text-sm font-medium text-center min-h-[20px]"></p>
-    </div>
+    </form>
   </div>
 </div>
 
-<script>
-  const courseSelect = document.getElementById('courseSelect');
-  const categorySelect = document.getElementById('categorySelect');
-  const hwNumberWrapper = document.getElementById('hwNumberWrapper');
-  const hwNumber = document.getElementById('hwNumber');
-  const uploadSecret = document.getElementById('uploadSecret');
-  const fileInput = document.getElementById('fileInput');
-  const filePlaceholder = document.getElementById('filePlaceholder');
-  const progressWrapper = document.getElementById('progressWrapper');
-  const progressBar = document.getElementById('progressBar');
-  const statusText = document.getElementById('status');
-  const uploadBtn = document.getElementById('uploadBtn');
-
-  const MAX_FILE_BYTES = 25 * 1024 * 1024;
-
-  categorySelect.addEventListener('change', () => {
-    hwNumberWrapper.classList.toggle('hidden', categorySelect.value !== 'HW');
-  });
-
-  function updateFileInfo() {
-    filePlaceholder.textContent = fileInput.files.length ? fileInput.files[0].name : 'Click to select a file';
-    clearStatus();
-  }
-
-  function showStatus(text, type) {
-    statusText.textContent = text;
-    statusText.className = "text-sm font-medium text-center min-h-[20px] " +
-      (type === 'error' ? 'text-rose-500' : type === 'success' ? 'text-emerald-500' : 'text-amber-500');
-  }
-
-  function clearStatus() {
-    statusText.textContent = '';
-  }
-
-  async function handleUpload() {
-    if (fileInput.files.length === 0) return showStatus("Please select a file first.", "error");
-    if (!uploadSecret.value) return showStatus("Enter the upload password.", "error");
-    if (categorySelect.value === 'HW' && !hwNumber.value) return showStatus("Enter an assignment number.", "error");
-
-    const file = fileInput.files[0];
-    if (file.size > MAX_FILE_BYTES) return showStatus("File is larger than 25MB.", "error");
-
-    uploadBtn.disabled = true;
-    showStatus("Requesting upload URL…", "info");
-
-    try {
-      const presignRes = await fetch('/.netlify/functions/presign-upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-upload-secret': uploadSecret.value },
-        body: JSON.stringify({
-          course: courseSelect.value,
-          category: categorySelect.value,
-          hwNumber: categorySelect.value === 'HW' ? hwNumber.value : undefined,
-          filename: file.name,
-          contentType: file.type,
-          fileSize: file.size,
-        }),
-      });
-      const presignData = await presignRes.json();
-      if (!presignRes.ok) throw new Error(presignData.error || 'Could not get upload URL');
-
-      showStatus("Uploading…", "info");
-      progressWrapper.classList.remove('hidden');
-      await putWithProgress(presignData.url, file);
-
-      showStatus("Uploaded successfully.", "success");
-      fileInput.value = '';
-      filePlaceholder.textContent = 'Click to select a file';
-    } catch (err) {
-      showStatus(err.message || "Upload failed.", "error");
-    } finally {
-      uploadBtn.disabled = false;
-      progressWrapper.classList.add('hidden');
-      progressBar.style.width = '0%';
-    }
-  }
-
-  function putWithProgress(url, file) {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('PUT', url);
-      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) progressBar.style.width = Math.round((e.loaded / e.total) * 100) + '%';
-      };
-      xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error('Upload failed (' + xhr.status + ')')));
-      xhr.onerror = () => reject(new Error('Network error during upload'));
-      xhr.send(file);
-    });
-  }
-</script>
+<script src="/js/upload.js" defer></script>
 {{ end }}

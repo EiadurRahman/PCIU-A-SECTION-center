@@ -1,195 +1,144 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const uploadForm = document.getElementById("uploadForm");
-    const fileInput = document.getElementById("fileInput");
-    const filePlaceholder = document.getElementById("filePlaceholder");
-    const categorySelect = document.getElementById("categorySelect");
-    const courseSelect = document.getElementById("courseSelect");
-    const hwNumberWrapper = document.getElementById("hwNumberWrapper");
-    const hwNumber = document.getElementById("hwNumber");
-    const uploadSecret = document.getElementById("uploadSecret");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const progressWrapper = document.getElementById("progressWrapper");
-    const progressBar = document.getElementById("progressBar");
-    const statusText = document.getElementById("status");
+  const uploadForm = document.getElementById("uploadForm");
+  const courseSelect = document.getElementById("courseSelect");
+  const categorySelect = document.getElementById("categorySelect");
+  const hwNumberWrapper = document.getElementById("hwNumberWrapper");
+  const hwNumber = document.getElementById("hwNumber");
+  const uploadSecret = document.getElementById("uploadSecret");
+  const fileInput = document.getElementById("fileInput");
+  const filePlaceholder = document.getElementById("filePlaceholder");
+  const progressWrapper = document.getElementById("progressWrapper");
+  const progressBar = document.getElementById("progressBar");
+  const statusText = document.getElementById("status");
+  const uploadBtn = document.getElementById("uploadBtn");
 
-    // 100 MB Limit
-    const MAX_FILE_SIZE = 100 * 1024 * 1024;
+  const MAX_FILE_BYTES = 100 * 1024 * 1024; // 100 MB
 
-    // Toggle HW Subfolder Input
-    if (categorySelect && hwNumberWrapper) {
-        categorySelect.addEventListener("change", () => {
-            if (categorySelect.value === "HW") {
-                hwNumberWrapper.classList.remove("hidden");
-                if (hwNumber) hwNumber.setAttribute("required", "required");
-            } else {
-                hwNumberWrapper.classList.add("hidden");
-                if (hwNumber) {
-                    hwNumber.removeAttribute("required");
-                    hwNumber.value = "";
-                }
-            }
-        });
+  // Toggle Homework input visibility
+  categorySelect.addEventListener("change", () => {
+    hwNumberWrapper.classList.toggle("hidden", categorySelect.value !== "HW");
+  });
+
+  // Display selected filename and size
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      filePlaceholder.textContent = `${file.name} (${sizeMB} MB)`;
+    } else {
+      filePlaceholder.textContent = "Click to select a file";
+    }
+    clearStatus();
+  });
+
+  // Handle Form Submission
+  uploadForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (fileInput.files.length === 0) {
+      return showStatus("Please select a file first.", "error");
+    }
+    if (!uploadSecret.value.trim()) {
+      return showStatus("Enter the upload password.", "error");
+    }
+    if (categorySelect.value === "HW" && !hwNumber.value.trim()) {
+      return showStatus("Enter an assignment number.", "error");
     }
 
-    // File Input UI Change Handler
-    if (fileInput && filePlaceholder) {
-        fileInput.addEventListener("change", () => {
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                filePlaceholder.textContent = `${file.name} (${sizeInMB} MB)`;
-            } else {
-                filePlaceholder.textContent = "Choose any file (Max 100MB)";
-            }
-        });
+    const file = fileInput.files[0];
+    if (file.size > MAX_FILE_BYTES) {
+      return showStatus("File exceeds maximum limit of 100MB.", "error");
     }
 
-    // Form Submission
-    if (uploadForm) {
-        uploadForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
+    uploadBtn.disabled = true;
+    showStatus("Requesting upload URL…", "info");
 
-            const file = fileInput ? fileInput.files[0] : null;
-            if (!file) {
-                showStatus("Please select a file to upload.", true);
-                return;
-            }
+    try {
+      const contentType = file.type || "application/octet-stream";
 
-            if (file.size > MAX_FILE_SIZE) {
-                showStatus("File size exceeds the 100MB maximum limit.", true);
-                return;
-            }
+      const presignRes = await fetch("/.netlify/functions/presign-upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-upload-secret": uploadSecret.value.trim()
+        },
+        body: JSON.stringify({
+          course: courseSelect.value,
+          category: categorySelect.value,
+          hwNumber: categorySelect.value === "HW" ? hwNumber.value.trim() : undefined,
+          filename: file.name,
+          contentType: contentType,
+          fileSize: file.size
+        })
+      });
 
-            const course = courseSelect ? courseSelect.value : "";
-            const category = categorySelect ? categorySelect.value : "";
-            const secret = uploadSecret ? uploadSecret.value.trim() : "";
+      const presignData = await presignRes.json();
+      if (!presignRes.ok) {
+        throw new Error(presignData.error || "Could not get upload URL");
+      }
 
-            if (!course || !category || !secret) {
-                showStatus("Please fill in all required fields.", true);
-                return;
-            }
+      const targetUrl = presignData.url || presignData.uploadUrl;
+      showStatus("Uploading…", "info");
+      progressWrapper.classList.remove("hidden");
 
-            let folder = category;
-            if (category === "HW" && hwNumber) {
-                const hwNum = hwNumber.value.trim().padStart(2, "0");
-                if (!hwNum) {
-                    showStatus("Please specify a Homework number.", true);
-                    return;
-                }
-                folder = `HW/${hwNum}`;
-            }
+      await putWithProgress(targetUrl, file, contentType);
 
-            // Set UI to loading state
-            setUploadingState(true);
-            showStatus("Requesting pre-signed URL...", false);
-            updateProgress(5);
+      showStatus("Uploaded successfully.", "success");
+      uploadForm.reset();
+      filePlaceholder.textContent = "Click to select a file";
+      hwNumberWrapper.classList.add("hidden");
 
-            try {
-                const contentType = file.type || "application/octet-stream";
-
-                // Step 1: Call Netlify Function for presigned URL
-                const presignRes = await fetch("/.netlify/functions/presign-upload", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        filename: file.name,
-                        fileType: contentType,
-                        fileSize: file.size,
-                        courseCode: course,
-                        category: folder,
-                        secret: secret
-                    })
-                });
-
-                const presignData = await presignRes.json();
-
-                if (!presignRes.ok) {
-                    throw new Error(presignData.error || "Failed to generate presigned upload URL.");
-                }
-
-                const { uploadUrl } = presignData;
-                showStatus("Uploading file to cloud storage...", false);
-                updateProgress(15);
-
-                // Step 2: Upload directly to Backblaze B2 using pre-signed PUT URL
-                await uploadFileWithProgress(uploadUrl, file, contentType, (percent) => {
-                    const mappedPercent = Math.min(15 + Math.round((percent * 85) / 100), 99);
-                    updateProgress(mappedPercent);
-                });
-
-                updateProgress(100);
-                showStatus("Upload successful!", false);
-
-                // Reset form
-                uploadForm.reset();
-                if (filePlaceholder) filePlaceholder.textContent = "Choose any file (Max 100MB)";
-                if (hwNumberWrapper) hwNumberWrapper.classList.add("hidden");
-
-            } catch (err) {
-                console.error("Upload Error:", err);
-                showStatus(err.message || "An unexpected error occurred during upload.", true);
-                updateProgress(0);
-            } finally {
-                setUploadingState(false);
-            }
-        });
+    } catch (err) {
+      console.error("Upload error:", err);
+      showStatus(err.message || "Upload failed.", "error");
+    } finally {
+      uploadBtn.disabled = false;
+      progressWrapper.classList.add("hidden");
+      progressBar.style.width = "0%";
     }
+  });
 
-    // File PUT transfer with progress via XMLHttpRequest
-    function uploadFileWithProgress(url, file, contentType, onProgress) {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("PUT", url, true);
-            xhr.setRequestHeader("Content-Type", contentType);
+  function putWithProgress(url, file, contentType) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", url, true);
+      xhr.setRequestHeader("Content-Type", contentType);
 
-            xhr.upload.onprogress = (e) => {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    onProgress(percentComplete);
-                }
-            };
-
-            xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve();
-                } else {
-                    reject(new Error(`Storage server error (HTTP ${xhr.status}).`));
-                }
-            };
-
-            xhr.onerror = () => {
-                reject(new Error("Network connection error during file transfer. Check CORS or network status."));
-            };
-
-            xhr.ontimeout = () => {
-                reject(new Error("Upload request timed out. Please retry."));
-            };
-
-            xhr.send(file);
-        });
-    }
-
-    function setUploadingState(isUploading) {
-        if (uploadBtn) {
-            uploadBtn.disabled = isUploading;
-            uploadBtn.textContent = isUploading ? "Uploading..." : "Upload Material";
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = `${percent}%`;
         }
-        if (progressWrapper) {
-            if (isUploading) progressWrapper.classList.remove("hidden");
-        }
-    }
+      };
 
-    function updateProgress(percent) {
-        if (progressBar) {
-            progressBar.style.width = `${percent}%`;
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`Storage returned HTTP ${xhr.status}. Upload failed.`));
         }
-    }
+      };
 
-    function showStatus(msg, isError) {
-        if (!statusText) return;
-        statusText.textContent = msg;
-        statusText.className = isError
-            ? "text-red-500 dark:text-red-400 text-sm text-center block mt-2 font-medium"
-            : "text-indigo-600 dark:text-indigo-400 text-sm text-center block mt-2 font-medium";
-    }
+      xhr.onerror = () => {
+        reject(new Error("Network connection error or CORS blocked during upload."));
+      };
+
+      xhr.send(file);
+    });
+  }
+
+  function showStatus(text, type) {
+    statusText.textContent = text;
+    statusText.className =
+      "text-sm font-medium text-center min-h-[20px] " +
+      (type === "error"
+        ? "text-rose-500"
+        : type === "success"
+        ? "text-emerald-500"
+        : "text-amber-500");
+  }
+
+  function clearStatus() {
+    statusText.textContent = "";
+  }
 });
