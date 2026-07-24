@@ -1,8 +1,7 @@
 {{ define "main" }}
-<article>
-    <h2>{{ .Title }}</h2>
-    <time>{{ .Date.Format "January 2, 2006" }}</time>
-    <div class="content">
+<article class="space-y-4">
+    <h2 class="text-2xl font-bold">{{ .Title }}</h2>
+    <div class="content mt-4 rounded-xl border border-black/10 bg-white/50 p-4 text-black shadow-sm backdrop-blur-sm transition-colors duration-300 prose prose-lg max-w-none">
         {{ .Content }}
     </div>
 </article>

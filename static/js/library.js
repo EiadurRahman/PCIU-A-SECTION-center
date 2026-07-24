@@ -98,19 +98,23 @@
     }
     breadcrumb.classList.remove("hidden");
     crumbs.forEach((crumb, i) => {
-      const span = document.createElement(crumb.onClick ? "button" : "span");
-      span.textContent = crumb.label;
+      const isLast = i === crumbs.length - 1;
+      const el = document.createElement(crumb.onClick ? "button" : "span");
+      el.textContent = crumb.label;
       if (crumb.onClick) {
-        span.className = "hover:underline text-black dark:text-white";
-        span.addEventListener("click", crumb.onClick);
+        el.type = "button";
+        el.className =
+          "shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-sm font-medium bg-white/40 dark:bg-black/50 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70 hover:bg-white/70 dark:hover:bg-black/70 hover:text-black dark:hover:text-white active:scale-95 transition-all duration-150";
+        el.addEventListener("click", crumb.onClick);
       } else {
-        span.className = "text-black dark:text-white font-medium";
+        el.className =
+          "shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-sm font-semibold bg-indigo-600/90 text-white";
       }
-      breadcrumb.appendChild(span);
-      if (i < crumbs.length - 1) {
+      breadcrumb.appendChild(el);
+      if (!isLast) {
         const sep = document.createElement("span");
-        sep.textContent = " / ";
-        sep.className = "mx-1";
+        sep.textContent = "›";
+        sep.className = "shrink-0 text-black/30 dark:text-white/30 px-0.5";
         breadcrumb.appendChild(sep);
       }
     });
@@ -129,11 +133,18 @@
     const node = fileRowTpl.content.cloneNode(true);
     node.querySelector(".file-name").textContent = file.name;
     node.querySelector(".file-size").textContent = formatBytes(file.size);
-    node.querySelector(".file-download").addEventListener("click", () => downloadFile(key));
+    const btn = node.querySelector(".file-download");
+    btn.addEventListener("click", () => downloadFile(key, btn));
     return node;
   }
 
-  async function downloadFile(key) {
+
+  async function downloadFile(key, btn) {
+    const label = btn.querySelector(".dl-label");
+    const spinner = btn.querySelector(".dl-spinner");
+    btn.disabled = true;
+    spinner.classList.remove("hidden");
+    label.textContent = "Downloading…";
     try {
       const res = await fetch(`/.netlify/functions/presign-download?key=${encodeURIComponent(key)}`);
       const data = await res.json();
@@ -141,6 +152,10 @@
       window.open(data.url, "_blank");
     } catch (err) {
       alert("Couldn't get download link. Try again.");
+    } finally {
+      spinner.classList.add("hidden");
+      label.textContent = "Download";
+      btn.disabled = false;
     }
   }
 

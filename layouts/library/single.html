@@ -1,19 +1,24 @@
 {{ define "main" }}
 <div id="library-root" class="max-w-5xl mx-auto">
 
-  <nav id="lib-breadcrumb" class="hidden mb-4 text-sm text-black/60 dark:text-white/60"></nav>
+  <!-- Breadcrumb rendered as pill buttons, horizontally scrollable on narrow screens -->
+  <nav id="lib-breadcrumb" class="hidden mb-4 sm:mb-6 flex items-center gap-1.5 overflow-x-auto pb-1"></nav>
 
-  <div id="lib-loading" class="text-center py-16 text-black/50 dark:text-white/50">
-    Loading library…
+  <div id="lib-loading" class="flex flex-col items-center justify-center gap-3 py-16 text-black/50 dark:text-white/50">
+    <svg class="animate-spin h-8 w-8 text-black/40 dark:text-white/40" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+    <span class="text-sm">Loading library…</span>
   </div>
 
   <div id="lib-error" class="hidden text-center py-16 text-rose-500"></div>
 
   <!-- Course grid -->
-  <div id="lib-courses" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <div id="lib-courses" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"></div>
 
   <!-- Category grid (3 fixed categories for one course) -->
-  <div id="lib-categories" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+  <div id="lib-categories" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"></div>
 
   <!-- File / subfolder list -->
   <div id="lib-files" class="hidden space-y-2"></div>
@@ -21,25 +26,31 @@
 </div>
 
 <template id="tpl-card">
-  <button class="lib-card w-full text-left p-5 rounded-2xl bg-white/30 dark:bg-black/50 backdrop-blur-md border border-black/5 dark:border-white/5 hover:bg-white/50 dark:hover:bg-black/70 transition-colors duration-200">
+  <button class="lib-card w-full text-left p-4 sm:p-5 rounded-2xl bg-white/30 dark:bg-black/50 backdrop-blur-md border border-black/5 dark:border-white/5 hover:bg-white/50 dark:hover:bg-black/70 active:scale-[0.98] transition-all duration-200">
     <div class="text-xs uppercase tracking-wide text-black/50 dark:text-white/50 card-code"></div>
-    <div class="text-lg font-semibold text-black dark:text-white card-name"></div>
+    <div class="text-base sm:text-lg font-semibold text-black dark:text-white card-name break-words"></div>
     <div class="text-xs text-black/40 dark:text-white/40 mt-2 card-meta"></div>
   </button>
 </template>
 
 <template id="tpl-file-row">
-  <div class="file-row flex items-center justify-between p-3 rounded-xl bg-white/30 dark:bg-black/50 backdrop-blur-md border border-black/5 dark:border-white/5">
-    <div class="flex items-center gap-3 overflow-hidden">
+  <div class="file-row flex items-center justify-between gap-2 p-3 rounded-xl bg-white/30 dark:bg-black/50 backdrop-blur-md border border-black/5 dark:border-white/5">
+    <div class="flex items-center gap-2.5 sm:gap-3 overflow-hidden min-w-0">
       <svg class="w-5 h-5 text-black/40 dark:text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
       </svg>
-      <div class="truncate">
+      <div class="truncate min-w-0">
         <p class="text-sm font-medium text-black dark:text-white truncate file-name"></p>
         <p class="text-xs text-black/40 dark:text-white/40 file-size"></p>
       </div>
     </div>
-    <button class="file-download px-3 py-1.5 text-sm rounded-lg bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-black dark:text-white transition-colors">Download</button>
+    <button class="file-download shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-black dark:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <svg class="dl-spinner hidden animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <span class="dl-label">Download</span>
+    </button>
   </div>
 </template>
 
