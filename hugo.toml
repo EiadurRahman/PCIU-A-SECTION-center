@@ -52,7 +52,7 @@ title = 'PCIU BBA-A CENTER'
 
   # Right Column: "Who made this?"
   right_title = "Who made this?"
-  right_text = "It's me, Yaad. One of your classmates. You have probably seen me in class. I am one of you. If this project helped you in any way, let me know. I'd love to listen."
+  right_text = "It’s me, Yaad. One of your classmates. You have probably seen me in the classes. I am one of you. If this project helped you in any way, walk to me and let me know. I’d love to listen."
   creator_image = "images/me.webp" # Place this in your static/images/ folder
   
   # Social links
