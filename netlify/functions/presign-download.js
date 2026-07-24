@@ -2,7 +2,8 @@
 // Returns: { url } — a short-lived presigned GET URL.
 const { GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { b2, BUCKET, corsHeaders, json } = require("./_b2-client");
+// const { b2, BUCKET, corsHeaders, json } = require("./_b2-client"); 
+const { s3Client: b2, BUCKET, corsHeaders, json } = require("./_b2-client"); // this should work with the new AWS SDK v3
 
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: corsHeaders() };
