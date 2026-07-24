@@ -1,62 +1,93 @@
 {{ define "main" }}
 {{- with .Site.Params.about_card -}}
 {{- if .enable -}}
-<!-- Outer Box: High-opacity (95%) background with a soft glassmorphism blur -->
-<div class="mx-auto my-8 max-w-[850px] rounded-[28px] bg-slate-50/30 p-10 font-sans text-slate-700 shadow-xl backdrop-blur-md transition-all duration-300 dark:bg-zinc-900/30 dark:text-zinc-300 dark:shadow-2xl">
-  
-  <h2 class="mt-0 mb-3 text-center text-2xl font-extrabold uppercase tracking-wider text-slate-800 transition-colors duration-300 dark:text-zinc-100">
+<!-- Outer Box: Scaled down padding & rounded corners on mobile -->
+<div
+  class="mx-auto my-4 sm:my-8 max-w-[850px] rounded-2xl sm:rounded-[28px] bg-slate-50/30 p-4 sm:p-8 md:p-10 font-sans text-slate-700 shadow-xl backdrop-blur-md transition-all duration-300 dark:bg-zinc-900/30 dark:text-zinc-300 dark:shadow-2xl">
+
+  <h2
+    class="mt-0 mb-2 sm:mb-3 text-center text-xl sm:text-2xl font-extrabold uppercase tracking-wider text-slate-800 transition-colors duration-300 dark:text-zinc-100">
     {{ .title }}
   </h2>
-  <div class="mb-8 rounded-[24px] border border-slate-200/60 bg-slate-50/90 p-5 text-center shadow-sm transition-colors duration-300 dark:border-zinc-700/60 dark:bg-zinc-900/80">
-    <p class="m-0 font-mono text-sm leading-relaxed text-slate-500 transition-colors duration-300 dark:text-zinc-400">
+
+  <div
+    class="mb-4 sm:mb-8 rounded-xl sm:rounded-[24px] border border-slate-200/60 bg-slate-50/90 p-3 sm:p-5 text-center shadow-sm transition-colors duration-300 dark:border-zinc-700/60 dark:bg-zinc-900/80">
+    <p
+      class="m-0 font-mono text-xs sm:text-sm leading-relaxed text-slate-500 transition-colors duration-300 dark:text-zinc-400">
       {{ .subtitle }}
     </p>
   </div>
 
-  <div class="grid grid-cols-1 gap-5 sm:grid-cols-[1.1fr_0.9fr]">
-    
-    <!-- Left Inner Box: High-opacity (95% light / 90% dark) -->
-    <div class="flex flex-col rounded-[20px] bg-white/95 p-6 shadow-sm border border-slate-100/50 transition-all duration-300 dark:bg-zinc-800/90 dark:border-zinc-700/30">
-      <h3 class="mt-0 mb-4 text-center text-lg font-bold text-slate-800 transition-colors duration-300 dark:text-zinc-200">
+  <div class="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-[1.1fr_0.9fr]">
+
+    <!-- Left Inner Box -->
+    <div
+      class="flex flex-col rounded-xl sm:rounded-[20px] bg-white/95 p-4 sm:p-6 shadow-sm border border-slate-100/50 transition-all duration-300 dark:bg-zinc-800/90 dark:border-zinc-700/30">
+      <h3
+        class="mt-0 mb-2 sm:mb-4 text-center text-base sm:text-lg font-bold text-slate-800 transition-colors duration-300 dark:text-zinc-200">
         {{ .left_title }}
       </h3>
-      <p class="m-0 text-sm leading-relaxed text-slate-600 whitespace-pre-line transition-colors duration-300 dark:text-zinc-300">
+      <p
+        class="m-0 text-xs sm:text-sm leading-relaxed text-slate-600 whitespace-pre-line transition-colors duration-300 dark:text-zinc-300">
         {{ .left_text | markdownify }}
       </p>
     </div>
 
-    <div class="flex flex-col gap-5">
-      
-      <!-- Right Inner Box: High-opacity (95% light / 90% dark) -->
-      <div class="flex gap-4 rounded-[20px] bg-white/95 p-6 items-start shadow-sm border border-slate-100/50 transition-all duration-300 dark:bg-zinc-800/90 dark:border-zinc-700/30">
+    <div class="flex flex-col gap-4 sm:gap-5">
+
+      <!-- Right Inner Box -->
+      <div
+        class="flex gap-3 sm:gap-4 rounded-xl sm:rounded-[20px] bg-white/95 p-4 sm:p-6 items-start shadow-sm border border-slate-100/50 transition-all duration-300 dark:bg-zinc-800/90 dark:border-zinc-700/30">
         <div class="flex-1">
-          <h3 class="mt-0 mb-4 text-center text-lg font-bold text-slate-800 transition-colors duration-300 dark:text-zinc-200">
+          <h3
+            class="mt-0 mb-2 sm:mb-4 text-center text-base sm:text-lg font-bold text-slate-800 transition-colors duration-300 dark:text-zinc-200">
             {{ .right_title }}
           </h3>
-          <p class="m-0 text-sm leading-relaxed text-slate-600 whitespace-pre-line transition-colors duration-300 dark:text-zinc-300">
+          <p
+            class="m-0 text-xs sm:text-sm leading-relaxed text-slate-600 whitespace-pre-line transition-colors duration-300 dark:text-zinc-300">
             {{ .right_text | markdownify }}
           </p>
         </div>
-        
+
         <!-- Creator Avatar & Socials -->
-        <div class="flex min-w-[80px] flex-col items-center gap-4">
+        <div class="flex min-w-[60px] sm:min-w-[80px] flex-col items-center gap-3 sm:gap-4">
           {{ if .creator_image }}
-          <img src="{{ .creator_image | relURL }}" alt="Creator Photo" class="h-20 w-20 rounded-2xl bg-slate-200/80 object-cover border border-slate-200/50 transition-colors duration-300 dark:bg-zinc-700/80 dark:border-zinc-600/50">
+          <img src="{{ .creator_image | relURL }}" alt="Creator Photo"
+            class="h-14 w-14 sm:h-20 sm:w-20 rounded-xl sm:rounded-2xl bg-slate-200/80 object-cover border border-slate-200/50 transition-colors duration-300 dark:bg-zinc-700/80 dark:border-zinc-600/50">
           {{ end }}
-          
-          <div class="flex flex-col gap-3">
+
+          <div class="flex flex-col gap-2.5 sm:gap-3 items-center">
             {{ if .facebook_url }}
-            <a href="{{ .facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook" class="text-slate-500 transition-all duration-200 hover:scale-110 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400">
-              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
+            <a href="{{ .facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook"
+              class="text-slate-500 transition-all duration-200 hover:scale-110 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400">
+              <svg class="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
               </svg>
             </a>
             {{ end }}
-            
+
+            {{ if .whatsapp_url }}
+            {{ $waText := .whatsapp_text | default "" }}
+            {{ $waLink := .whatsapp_url }}
+            {{ if $waText }}
+              {{ $waLink = printf "%s?text=%s" .whatsapp_url ($waText | urlquery) }}
+            {{ end }}
+            <a href="{{ $waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp"
+              class="text-slate-500 transition-all duration-200 hover:scale-110 hover:text-emerald-500 dark:text-zinc-400 dark:hover:text-emerald-400">
+              <svg class="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.333 4.993L2 22l5.233-1.237a9.96 9.96 0 004.779 1.221h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.038-5.176-2.925-7.062A9.925 9.925 0 0012.012 2zm0 1.664c2.222 0 4.312.866 5.88 2.435A8.271 8.271 0 0120.327 12c0 4.586-3.731 8.318-8.316 8.318h-.003a8.28 8.28 0 01-4.223-1.157l-.303-.18-3.102.734.747-3.023-.197-.312a8.278 8.278 0 01-1.267-4.38c0-4.586 3.732-8.318 8.319-8.318zm4.568 11.234c-.25-.125-1.482-.731-1.711-.814-.23-.083-.397-.125-.564.125-.166.25-.646.814-.792.98-.146.166-.292.187-.542.062-.25-.125-1.056-.389-2.011-1.24-.744-.664-1.247-1.484-1.393-1.734-.146-.25-.015-.385.11-.509.112-.112.25-.292.375-.438.125-.145.166-.25.25-.416.083-.166.042-.312-.02-.437-.063-.125-.564-1.358-.773-1.858-.203-.487-.41-.421-.564-.428l-.481-.009c-.166 0-.437.062-.666.312-.229.25-.875.855-.875 2.085 0 1.23.896 2.417 1.02 2.584.125.166 1.764 2.694 4.274 3.777.597.257 1.064.411 1.428.526.6.19 1.146.163 1.577.099.48-.071 1.482-.605 1.69-1.189.208-.583.208-1.083.145-1.188-.062-.104-.229-.166-.479-.291z" />
+              </svg>
+            </a>
+            {{ end }}
+
             {{ if .instagram_url }}
-            <a href="{{ .instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram" class="text-slate-500 transition-all duration-200 hover:scale-110 hover:text-pink-600 dark:text-zinc-400 dark:hover:text-pink-400">
-              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            <a href="{{ .instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"
+              class="text-slate-500 transition-all duration-200 hover:scale-110 hover:text-pink-600 dark:text-zinc-400 dark:hover:text-pink-400">
+              <svg class="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
               </svg>
             </a>
             {{ end }}
@@ -64,14 +95,15 @@
         </div>
       </div>
 
-      <!-- Action Button: Smooth 95% opacity to 100% opacity on hover -->
+      <!-- Action Button -->
       {{ if .extra_box_text }}
-      <a href="{{ .extra_box_url | default "#" }}" class="block rounded-[20px] bg-slate-800/95 py-4 px-6 text-center text-xl font-medium text-white no-underline shadow-md transition-all duration-200 hover:bg-slate-800 hover:scale-[1.01] active:scale-100 dark:bg-zinc-700/95 dark:hover:bg-zinc-700">
+      <a href="{{ .extra_box_url | default "#" }}"
+        class="block rounded-xl sm:rounded-[20px] bg-slate-800/95 py-3 sm:py-4 px-4 sm:px-6 text-center text-base sm:text-xl font-medium text-white no-underline shadow-md transition-all duration-200 hover:bg-slate-800 hover:scale-[1.01] active:scale-100 dark:bg-zinc-700/95 dark:hover:bg-zinc-700">
         {{ .extra_box_text }}
       </a>
       {{ end }}
     </div>
-    
+
   </div>
 </div>
 {{- end -}}

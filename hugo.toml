@@ -58,7 +58,8 @@ title = 'PCIU BBA-A CENTER'
   # Social links
   facebook_url = "https://www.facebook.com/EiadurRahman07"
   instagram_url = "https://www.instagram.com/eiadurrahman/"
-
+  whatsapp_url = "https://wa.me/8801983289374" # Replace with your WhatsApp number in international format
+  whatsapp_text = "Hello! I'm from your batch, and I need some help with the website. My name is " # Optional pre-filled message for WhatsApp link
   # Bottom Right Box
   extra_box_text = "Lets go to the home page"
   extra_box_url = "/" # Optional link for the bottom-right button/box
