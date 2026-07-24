@@ -65,6 +65,10 @@ title = 'PCIU BBA-A CENTER'
   extra_box_url = "/" # Optional link for the bottom-right button/box
 
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
 # build scripts
 [build]
