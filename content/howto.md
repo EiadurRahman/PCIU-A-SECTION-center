@@ -12,7 +12,7 @@ Well hello, it's me! The dev of the Yaad project. This site is fairly straightfo
   <p>The home page consists of a simple class routine that automatically updates every day.
   An admin can also add short notes under the class cards.</p>
   <div style="display:flex; justify-content:center; padding:10px">
-    <img src="/images/howto/routine_card.png" style="width: 100%; max-width: 750px; height: auto; border-radius: 16px;" alt="Routine card preview">
+    <img src="/images/howto/routine_card.png" loading="lazy" style="width: 100%; max-width: 750px; height: auto; border-radius: 16px;" alt="Routine card preview">
   </div>
 </div>
 
@@ -35,7 +35,7 @@ This page is where you upload course materials. Follow the options below:
 > **Note:** Due to current limits, you can only upload **1 file at a time**.
 
 <div align="center">
-  <img src="/images/howto/upload.png" alt="Upload Page Preview" style="border-radius: 12px; max-width: 550px; width: 100%;">
+  <img src="/images/howto/upload.png" loading="lazy" alt="Upload Page Preview" style="border-radius: 12px; max-width: 550px; width: 100%;">
 </div>
 
 ---
@@ -47,9 +47,9 @@ This page is where you upload course materials. Follow the options below:
 <p>In this tab, everything is organized and ready for you to download.</p>
 <p>This section is self-explanatory.</p>
 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; padding:10px; width:100%; align-items:start;">
-    <img src="/images/howto/lib1.png" style="width:100%; height:auto; border-radius:16px; display:block;" alt="library card preview">
-    <img src="/images/howto/lib2.png" style="width:100%; height:auto; border-radius:16px; display:block;" alt="upload card preview">
-    <img src="/images/howto/lib3.png" style="width:100%; height:auto; border-radius:16px; display:block;" alt="upload card preview">
+    <img src="/images/howto/lib1.png" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block;" alt="library card preview">
+    <img src="/images/howto/lib2.png" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block;" alt="upload card preview">
+    <img src="/images/howto/lib3.png" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block;" alt="upload card preview">
 </div>
 </div>
 
