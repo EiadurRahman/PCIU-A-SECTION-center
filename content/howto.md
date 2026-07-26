@@ -32,7 +32,7 @@ This page is where you upload course materials. Follow the options below:
 | **Index** *(Homework only)* |  Enter the class/lecture number for which the HW was given (e.g., `1`). |
 | **Access Password** | Prevents unauthorized uploads. |
 
-> **Note:** Due to current limits, you can only upload **1 file at a time**.
+> **Note:** Due to current limits, you can upload only one file at a time. If you are trying to upload images, combine them into a PDF.
 
 <div align="center">
   <img src="/images/howto/upload.png" loading="lazy" alt="Upload Page Preview" style="border-radius: 12px; max-width: 550px; width: 100%;">
