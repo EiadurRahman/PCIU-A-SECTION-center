@@ -3,7 +3,7 @@ title: "How to use this site?"
 date : "2026-07-24"
 ---
 
-Well hello, it's me! The dev of the Yaad project. This site is fairly straightforward to use, but I still made this simple guide for anyone struggling with it.
+Well hello, it's me! The dev of the project (Yaad). This site is fairly straightforward to use, but I still made this simple guide for anyone struggling with it.
 
 ----
 <!-- home page -->
