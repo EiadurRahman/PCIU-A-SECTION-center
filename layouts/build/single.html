@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="max-w-md mx-auto my-8 p-6 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl text-slate-100 font-sans">
+  <!-- Status Badge -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center gap-2">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+      </span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Site Status</span>
+    </div>
+    <span class="text-xs text-slate-400 font-mono bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700/50">
+      v{{ hugo.Version }}
+    </span>
+  </div>
+
+  <!-- Main Info -->
+  <div class="space-y-1">
+    <h2 class="text-xs font-medium text-slate-400 uppercase tracking-widest">Last Built</h2>
+    <div class="flex items-baseline gap-2">
+      <p class="text-3xl font-extrabold tracking-tight text-white font-mono">
+        {{ now.Format "3:04pm" }}
+      </p>
+      <span class="text-sm font-medium text-slate-400">
+        {{ now.Format "MST" }}
+      </span>
+    </div>
+    <p class="text-sm text-slate-400 pt-1">
+      {{ now.Format "Monday, Jan 2, 2006" }}
+    </p>
+  </div>
+
+  <!-- Footer metadata -->
+  <div class="mt-6 pt-4 border-t border-slate-800/80 flex justify-between items-center text-xs text-slate-500 font-mono">
+    <span>Environment: <strong class="text-slate-300 font-normal">{{ hugo.Environment }}</strong></span>
+    <span>Pages: <strong class="text-slate-300 font-normal">{{ len .Site.RegularPages }}</strong></span>
+  </div>
+</div>
+{{ end }}
