@@ -6,14 +6,19 @@
 content/
     _index.md
     about.md
+    build.md
     howto.md
     library.md
     upload.md
+data/
+    classes.json
 layouts/
     _default/
         baseof.html
         single.html
     about/
+        single.html
+    build/
         single.html
     index.html
     library/
@@ -112,7 +117,7 @@ title: "How to use this site?"
 date : "2026-07-24"
 ---
 
-Well hello, it's me! The dev of the Yaad project. This site is fairly straightforward to use, but I still made this simple guide for anyone struggling with it.
+Well hello, it's me! The dev of the project (Yaad). This site is fairly straightforward to use, but I still made this simple guide for anyone struggling with it.
 
 ----
 <!-- home page -->
@@ -141,7 +146,7 @@ This page is where you upload course materials. Follow the options below:
 | **Index** *(Homework only)* |  Enter the class/lecture number for which the HW was given (e.g., `1`). |
 | **Access Password** | Prevents unauthorized uploads. |
 
-> **Note:** Due to current limits, you can only upload **1 file at a time**.
+> **Note:** Due to current limits, you can upload only one file at a time. If you are trying to upload images, combine them into a PDF.
 
 <div align="center">
   <img src="/images/howto/upload.png" loading="lazy" alt="Upload Page Preview" style="border-radius: 12px; max-width: 550px; width: 100%;">
@@ -163,6 +168,145 @@ This page is where you upload course materials. Follow the options below:
 </div>
 
 ---
+```
+
+### content/build.md
+
+```markdown
+---
+title: "BUILD"
+layout: "single"
+type: "build"       
+---
+
+
+```
+
+### data/classes.json
+
+```json
+{
+  "semester": "Fall 2026",
+  "program": "BBA",
+  "batch": "BBA-37-D-A (1st semester)",
+  "batch_coordinator": {
+    "name": "Hafsa Binta Firdaus",
+    "designation": "Lecturer, Department of Business Administration",
+    "major": "HRM",
+    "contact_number": "01879377124"
+  },
+  "schedule": {
+    "Saturday": [
+      {
+        "time_slot": "8.30am-10.00am",
+        "course_code": "ACC 100",
+        "course_title": "Financial Accounting",
+        "instructor": "CT-MIH",
+        "room": 119,
+        "note": ""
+      },
+      {
+        "time_slot": "11.30am-1.00pm",
+        "course_code": "BUS 100",
+        "course_title": "Introduction to Business",
+        "instructor": "SHA",
+        "room": 222,
+        "note": ""
+      },
+      {
+        "time_slot": "1.30pm-03.00pm",
+        "course_code": "MKT 200",
+        "course_title": "Principles of Marketing",
+        "instructor": "CT: MRC",
+        "room": 119,
+        "note": ""
+      }
+    ],
+    "Sunday": [
+      {
+        "time_slot": "8.30am-10.00am",
+        "course_code": "ENG 101",
+        "course_title": "ENG Composition",
+        "instructor": "BBA-37-A MRF",
+        "room": 218,
+        "note": ""
+      },
+      {
+        "time_slot": "10.00am-11.30am",
+        "course_code": "HIST-101",
+        "course_title": "History of the Emergence of Independent Bangladesh",
+        "instructor": "KCB",
+        "room": 219,
+        "note": ""
+      },
+      {
+        "time_slot": "1.30pm-03.00pm",
+        "course_code": "MGT 200",
+        "course_title": "Principles of Management",
+        "instructor": "CT:AZM",
+        "room": 208,
+        "note": ""
+      }
+    ],
+    "Monday": [
+      {
+        "time_slot": "1.30pm-03.00pm",
+        "course_code": "MKT 200",
+        "course_title": "Principles of Marketing",
+        "instructor": "CT: MRC",
+        "room": 218,
+        "note": ""
+      },
+      {
+        "time_slot": "4.30pm-6.00pm",
+        "course_code": "ACC 100",
+        "course_title": "Financial Accounting",
+        "instructor": "CT-MIH",
+        "room": 119,
+        "note": ""
+      }
+    ],
+    "Tuesday": [],
+    "Wednesday": [
+      {
+        "time_slot": "8.30am-10.00am",
+        "course_code": "HIST-101",
+        "course_title": "History of the Emergence of Independent Bangladesh",
+        "instructor": "KCB",
+        "room": 222,
+        "note": ""
+      },
+      {
+        "time_slot": "10.00am-11.30am",
+        "course_code": "MGT 200",
+        "course_title": "Principles of Management",
+        "instructor": "CT:AZM",
+        "room": 222,
+        "note": ""
+      }
+    ],
+    "Thursday": [
+      {
+        "time_slot": "8.30am-10.00am",
+        "course_code": "ENG 101",
+        "course_title": "Composition",
+        "instructor": "BBA-37-A MRF",
+        "room": 119,
+        "note": ""
+      },
+      {
+        "time_slot": "10.00am-11.30am",
+        "course_code": "BUS 100",
+        "course_title": "Introduction to Business",
+        "instructor": "CT-SHA",
+        "room": 218,
+        "note": ""
+      }
+    ],
+    "Friday": []
+  }
+}
+
 ```
 
 ### layouts/index.html
@@ -243,8 +387,9 @@ This page is where you upload course materials. Follow the options below:
     <div
         class="mt-4 rounded-xl border border-black/10 bg-white/50 p-4 text-black shadow-sm backdrop-blur-sm transition-colors duration-300 prose prose-lg max-w-none dark:border-white/10 dark:bg-black/50 dark:text-slate-100">
         <div class="flex items-center justify-between gap-4">
-            <h2 class="text-2xl font-bold">{{ .Title }}</h2>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold">{{ .Title }}</h2>
             <a href="/"
+                class="shrink-0 whitespace-nowrap"
                 style="display:inline-block; padding: 10px 18px; border-radius: 999px; text-decoration: none; font-weight: 700; background: var(--accent-color, #535353); color: var(--text-on-accent, #ffffff); box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s ease;"
                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.25)';"
                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';">Go
@@ -920,6 +1065,50 @@ This page is where you upload course materials. Follow the options below:
 </template>
 
 <script src="{{ "js/library.js" | relURL }}" defer></script>
+{{ end }}
+```
+
+### layouts/build/single.html
+
+```html
+{{ define "main" }}
+<div class="max-w-md mx-auto my-8 p-6 bg-white/90 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/70 dark:border-slate-800 shadow-xl text-slate-900 dark:text-slate-100 font-sans">
+  <!-- Status Badge -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center gap-2">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+      </span>
+      <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Site Status</span>
+    </div>
+    <span class="text-xs text-slate-400 font-mono bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700/50">
+      v{{ hugo.Version }}
+    </span>
+  </div>
+
+  <!-- Main Info -->
+  <div class="space-y-1">
+    <h2 class="text-xs font-medium text-slate-400 uppercase tracking-widest">Last Built</h2>
+    <div class="flex items-baseline gap-2">
+      <p class="text-3xl font-extrabold tracking-tight text-white font-mono">
+        {{ now.Format "3:04pm" }}
+      </p>
+      <span class="text-sm font-medium text-slate-400">
+        {{ now.Format "MST" }}
+      </span>
+    </div>
+    <p class="text-sm text-slate-400 pt-1">
+      {{ now.Format "Monday, Jan 2, 2006" }}
+    </p>
+  </div>
+
+  <!-- Footer metadata -->
+  <div class="mt-6 pt-4 border-t border-slate-800/80 flex justify-between items-center text-xs text-slate-500 font-mono">
+    <span>Environment: <strong class="text-slate-300 font-normal">{{ hugo.Environment }}</strong></span>
+    <span>Pages: <strong class="text-slate-300 font-normal">{{ len .Site.RegularPages }}</strong></span>
+  </div>
+</div>
 {{ end }}
 ```
 

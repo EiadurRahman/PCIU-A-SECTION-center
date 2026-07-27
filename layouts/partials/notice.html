@@ -1,0 +1,58 @@
+<!--
+  Notice banner — build-time version, same visual style as class_card.html.
+  Reads data/notice.yaml through Hugo's Site.Data (Hugo auto-loads every
+  file under data/ keyed by filename), so this needs a rebuild/redeploy
+  whenever notice.yaml changes — unlike class_card.html's live client fetch.
+
+  Schema (data/notice.yaml):
+    show: "true"
+    date: "2026-07-27"
+    message: "Library will be down for maintenance tonight."
+
+  Set show to "false" to hide the notice (date/message can stay filled in,
+  ready for next time):
+    show: "false"
+
+  Sizing/theme follow class_card.html: clamp()-based fluid CSS (no md:
+  breakpoints), colors via Tailwind's dark: variant tied to the navbar's
+  theme toggle.
+-->
+
+{{ $notice := .Site.Data.notice }}
+{{ if and $notice (eq $notice.show "true") }}
+<style>
+    #notice-root {
+        padding: clamp(0.6rem, 3vw, 1.25rem);
+        border-radius: clamp(0.75rem, 4vw, 1.5rem);
+        margin-top: clamp(1rem, 3vw, 2rem);
+        gap: clamp(0.5rem, 2vw, 1rem);
+    }
+
+    #notice-root .ntc-badge {
+        font-size: clamp(0.55rem, 1.8vw, 0.7rem);
+        letter-spacing: clamp(0.05em, 0.6vw, 0.15em);
+        padding: clamp(0.15rem, 1vw, 0.25rem) clamp(0.4rem, 2vw, 0.6rem);
+        border-radius: clamp(0.3rem, 1.5vw, 0.5rem);
+    }
+
+    #notice-root .ntc-date {
+        font-size: clamp(0.55rem, 1.8vw, 0.75rem);
+        white-space: nowrap;
+    }
+
+    #notice-root .ntc-message {
+        font-size: clamp(0.65rem, 2.4vw, 0.9375rem);
+        line-height: 1.5;
+    }
+</style>
+
+<div id="notice-root" class="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-start bg-gradient-to-b from-white to-neutral-50 dark:from-[#2a2a2a] dark:to-[#1c1c1c] text-black dark:text-white border-l-4 border-black/30 dark:border-white/30 border-t border-r border-b border-black/5 dark:border-white/5 shadow-xl dark:shadow-2xl font-sans transition-colors duration-300">
+    <div class="flex flex-row items-center justify-between sm:flex-col sm:items-start sm:shrink-0 gap-2">
+        <span class="ntc-badge font-semibold uppercase bg-black/10 dark:bg-white/10 text-black/70 dark:text-neutral-300">Notice</span>
+        {{ with $notice.date }}
+        <span class="ntc-date font-medium text-black/50 dark:text-neutral-500">{{ . }}</span>
+        {{ end }}
+    </div>
+    <p class="ntc-message text-black/80 dark:text-neutral-200 mt-2 sm:mt-0">{{ $notice.message }}</p>
+</div>
+{{ end }}
