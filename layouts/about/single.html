@@ -97,10 +97,10 @@
 
       <!-- Action Button -->
       {{ if .extra_box_text }}
-      <a href="{{ .extra_box_url | default "#" }}"
-        class="block rounded-xl sm:rounded-[20px] bg-slate-800/95 py-3 sm:py-4 px-4 sm:px-6 text-center text-base sm:text-xl font-medium text-white no-underline shadow-md transition-all duration-200 hover:bg-slate-800 hover:scale-[1.01] active:scale-100 dark:bg-zinc-700/95 dark:hover:bg-zinc-700">
-        {{ .extra_box_text }}
-      </a>
+          <a href="{{ .extra_box_url | default "#" }}"
+            class="block rounded-xl sm:rounded-[20px] bg-gradient-to-b from-white to-neutral-50 dark:from-[#2a2a2a] dark:to-[#1c1c1c] border border-black/10 dark:border-white/10 py-3 sm:py-4 px-4 sm:px-6 text-center text-base sm:text-xl font-medium text-black dark:text-white no-underline shadow-md dark:shadow-2xl transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10 hover:scale-[1.01] active:scale-100">
+            {{ .extra_box_text }}
+          </a>
       {{ end }}
     </div>
 
