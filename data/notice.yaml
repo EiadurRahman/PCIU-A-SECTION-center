@@ -2,8 +2,6 @@
   # To show a notice, fill both fields:
 # data/notice.yaml
 show: "true"
-date: "2026-07-27"
-message: "Port City International University will remain closed from July 29 (Wednesday) to July 30 (Thursday) on the occasion of the Monsoon holiday. All classes and office activities will resume on July 31, 2026 (Friday)."
-  # To show nothing, set both to null instead:
-  # date: null
-  # message: null
+date: "2026-07-31"
+message: "There will be a Class Test on History and English on Sunday (August 02, 2026)."
+# To show nothing, set both to null instead:
