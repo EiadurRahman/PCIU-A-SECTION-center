@@ -3,5 +3,6 @@
 # data/notice.yaml
 show: "false"
 date: "2026-07-31"
-message: "There will be a Class Test on History and English on Sunday (August 02, 2026)."
+message: "There will be a class test on History and English on Sunday, August 2, 2026.
+          The last date for submitting BBA club forms is 1 August 2026. Please submit your forms before the deadline."
 # To show nothing, set both to null instead:
