@@ -1,7 +1,7 @@
   # data/notice.yaml
   # To show a notice, fill both fields:
 # data/notice.yaml
-show: "true"
+show: "false"
 date: "2026-07-31"
 message: "There will be a Class Test on History and English on Sunday (August 02, 2026)."
 # To show nothing, set both to null instead:
