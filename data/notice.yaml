@@ -1,7 +1,7 @@
 
 # To show a notice, fill both fields:
 # data/notice.yaml
-show: "true"
+show: "false"
 date: "2026-08-11"
 message: "Rescheduled classes for Saturday and Monday will be held tomorrow (Tuesday,AUG-11) at 8:30 AM and 10:00 AM. Room numbers will be announced upon arrival at the university. Please wait on the ground floor until further notice."
 # To show nothing, set both to null instead:
